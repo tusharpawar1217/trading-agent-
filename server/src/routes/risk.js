@@ -6,7 +6,7 @@
  */
 
 import express from 'express';
-import { riskManager } from '../core/risk/RiskManager.js';
+import { riskManager } from '../core/risk/index.js';
 
 const router = express.Router();
 
