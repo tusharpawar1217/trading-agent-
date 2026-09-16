@@ -38,6 +38,7 @@ coverage/
 # Docker
 .dockerignore
 
-# Documentation (except README.md)
+# Documentation (exclude all .md except README and API guide)
 *.md
 !README.md
+!API_USAGE_GUIDE.md
