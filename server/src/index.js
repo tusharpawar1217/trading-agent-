@@ -24,13 +24,26 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`FX Desk API running on port ${PORT}`);
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
   
+  // Initialize Risk Manager
+  console.log('\n🛡️  Initializing Risk Management System...');
+  const { riskManager } = await import('./core/risk/index.js');
+  await riskManager.initialize();
+  
+  const status = riskManager.getStatus();
+  console.log(`   Active circuit breakers: ${status.length}`);
+  status.forEach(b => {
+    console.log(`   - ${b.name}: ${b.status.tripped ? '🔴 TRIPPED' : '🟢 Active'}`);
+  });
+  
   // Check for API keys
   if (!process.env.GEMINI_API_KEY) {
-    console.warn('⚠️  GEMINI_API_KEY not set - LLM commentary will be unavailable');
+    console.warn('\n⚠️  GEMINI_API_KEY not set - LLM commentary will be unavailable');
     console.warn('   Get your free API key at: https://makersuite.google.com/app/apikey');
   }
+  
+  console.log('\n✅ FX Desk ready for trading\n');
 });

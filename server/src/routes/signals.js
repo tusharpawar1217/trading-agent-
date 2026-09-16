@@ -2,6 +2,7 @@ import express from 'express';
 import { computeSignal, calculateStopLoss, calculateTakeProfit } from '../utils/signalScorer.js';
 import { getHistoricalRates } from '../services/marketData.js';
 import { generateCommentary } from '../services/llmService.js';
+import { riskManager } from '../core/risk/index.js';
 
 const router = express.Router();
 
@@ -23,6 +24,33 @@ router.post('/generate', async (req, res) => {
     
     // Compute signal
     const signal = computeSignal(marketData);
+    
+    // Check circuit breakers BEFORE providing signal
+    const riskCheck = await riskManager.checkAll({
+      pair,
+      signal,
+      marketData,
+      timestamp: Date.now(),
+    });
+    
+    // If any breaker tripped, return blocked signal
+    if (!riskCheck.allowed) {
+      return res.status(403).json({
+        signal: {
+          ...signal,
+          verdict: 'BLOCKED',
+          riskCheckFailed: true,
+        },
+        riskStatus: {
+          allowed: false,
+          reason: riskCheck.reason,
+          trippedBreakers: riskManager.getTrippedBreakers(),
+        },
+        commentary: null,
+        generatedAt: new Date().toISOString(),
+        warning: '⚠️ Signal blocked by risk management system. Review circuit breaker status before trading.'
+      });
+    }
     
     // Add suggested SL/TP if verdict is not HOLD
     if (signal.verdict !== 'HOLD') {
