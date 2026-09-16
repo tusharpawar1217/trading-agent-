@@ -37,3 +37,7 @@ coverage/
 
 # Docker
 .dockerignore
+
+# Documentation (except README.md)
+*.md
+!README.md
