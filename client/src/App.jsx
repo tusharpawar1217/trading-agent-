@@ -6,6 +6,8 @@ import IndicatorPanel from './components/IndicatorPanel';
 import SignalGenerator from './components/SignalGenerator';
 import SignalCard from './components/SignalCard';
 import PositionsView from './components/PositionsView';
+import RiskDashboard from './components/RiskDashboard';
+import IntradayTrading from './pages/IntradayTrading';
 import { fetchAvailablePairs, fetchHistoricalData } from './services/api';
 import { createPosition } from './services/tradingService';
 import { saveSignal, savePosition } from './services/storageService';
@@ -159,6 +161,13 @@ function App() {
           Market Analysis
         </button>
         <button
+          className={`btn ${activeTab === 'intraday' ? 'btn-primary' : 'btn-secondary'}`}
+          onClick={() => setActiveTab('intraday')}
+        >
+          <Activity size={16} />
+          Intraday Signals
+        </button>
+        <button
           className={`btn ${activeTab === 'trading' ? 'btn-primary' : 'btn-secondary'}`}
           onClick={() => setActiveTab('trading')}
         >
@@ -171,6 +180,12 @@ function App() {
         >
           <TrendingUp size={16} />
           Paper Positions
+        </button>
+        <button
+          className={`btn ${activeTab === 'risk' ? 'btn-primary' : 'btn-secondary'}`}
+          onClick={() => setActiveTab('risk')}
+        >
+          🛡️ Risk Dashboard
         </button>
       </div>
 
@@ -198,6 +213,10 @@ function App() {
         </>
       )}
 
+      {activeTab === 'intraday' && (
+        <IntradayTrading />
+      )}
+
       {activeTab === 'trading' && (
         <>
           <SignalGenerator
@@ -217,6 +236,10 @@ function App() {
 
       {activeTab === 'positions' && (
         <PositionsView currentPrices={currentPrices} />
+      )}
+
+      {activeTab === 'risk' && (
+        <RiskDashboard />
       )}
     </div>
   );

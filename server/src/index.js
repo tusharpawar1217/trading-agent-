@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import marketDataRoutes from './routes/marketData.js';
 import signalRoutes from './routes/signals.js';
 import riskRoutes from './routes/risk.js';
+import intradaySignalRoutes from './routes/intradaySignals.js';
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use('/api/market-data', marketDataRoutes);
 app.use('/api/signals', signalRoutes);
 app.use('/api/risk', riskRoutes);
+app.use('/api/intraday-signals', intradaySignalRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
