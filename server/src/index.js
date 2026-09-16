@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import marketDataRoutes from './routes/marketData.js';
 import signalRoutes from './routes/signals.js';
+import riskRoutes from './routes/risk.js';
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.use(express.json());
 // Routes
 app.use('/api/market-data', marketDataRoutes);
 app.use('/api/signals', signalRoutes);
+app.use('/api/risk', riskRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
