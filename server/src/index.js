@@ -27,7 +27,8 @@ app.listen(PORT, () => {
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
   
   // Check for API keys
-  if (!process.env.ANTHROPIC_API_KEY) {
-    console.warn('⚠️  ANTHROPIC_API_KEY not set - LLM commentary will be unavailable');
+  if (!process.env.GEMINI_API_KEY) {
+    console.warn('⚠️  GEMINI_API_KEY not set - LLM commentary will be unavailable');
+    console.warn('   Get your free API key at: https://makersuite.google.com/app/apikey');
   }
 });
